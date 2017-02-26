@@ -37,6 +37,16 @@ class Product(models.Model):
 	def __str__(self):
 		return self.identifier
 
+class Purchase(models.Model):
+	couponCode = models.CharField(max_length=6, blank=True)
+	productId = models.CharField(max_length=50, blank=False)
+	email = models.EmailField(help_text='A valid email address, please.')
+
+	def __str__(self):
+		return u'The product %s has been bought by %s' % (self.product_id, self.email)
+
+
+
 
 
 
