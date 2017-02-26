@@ -43,7 +43,7 @@ class Purchase(models.Model):
 	email = models.EmailField(help_text='A valid email address, please.')
 
 	def __str__(self):
-		return u'The product %s has been bought by %s' % (self.product_id, self.email)
+		return u'The product %s has been bought by %s' % (self.productId, self.email)
 
 
 

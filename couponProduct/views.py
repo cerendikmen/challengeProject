@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import status
 from .models import *
 from datetime import date
 
@@ -83,7 +84,16 @@ class Discount(APIView):
 		response['price'] = str(newPrice)
 		return Response(response)
 		
-				
+class RecordPurchase(APIView):
+	def post(self, request, format=None):
+		coupon_code = request.data['coupon']
+		product_id = request.data['product_id']
+		email = request.data['email']
+	
+
+		newPurchase = Purchase(couponCode = coupon_code, productId = product_id, email = email)	
+		newPurchase.save()
+		return Response(status=status.HTTP_201_CREATED)	
 
 
 

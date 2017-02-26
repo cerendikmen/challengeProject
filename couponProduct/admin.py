@@ -5,3 +5,4 @@ from .models import *
 admin.site.register(Coupon)
 admin.site.register(Product)
 admin.site.register(Purchase)
+

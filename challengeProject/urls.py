@@ -20,4 +20,5 @@ from couponProduct import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^discount/', views.Discount.as_view()),
+    url(r'^purchases/', views.RecordPurchase.as_view()),
 ]
