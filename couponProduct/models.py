@@ -2,7 +2,12 @@ from django.db import models
 from datetime import date
 from django.utils.crypto import get_random_string
 
-# Create your models here.
+'''
+
+There are 3 models created. Coupon model for holding coupons, Product for products
+and Purchase for successful purchases made.
+
+'''
 
 class Coupon(models.Model):
 	PERCENTAGE = 'P'
@@ -43,7 +48,7 @@ class Purchase(models.Model):
 	email = models.EmailField("E-mail", help_text='A valid email address, please.')
 
 	def __str__(self):
-		return u'The product %s has been bought by %s' % (product.identifier, self.email)
+		return u'The product %s has been bought by %s' % (self.product.identifier, self.email)
 
 
 

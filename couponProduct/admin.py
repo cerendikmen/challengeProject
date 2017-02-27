@@ -10,12 +10,27 @@ class CouponForm(forms.ModelForm):
         fields = '__all__'
 
     def clean(self):
+    	cleaned_data = super(CouponForm, self).clean()
     	start_date = self.cleaned_data.get('valid_from')
     	end_date = self.cleaned_data.get('valid_until')
     	if end_date is not None:
     		if start_date > end_date:
     			raise forms.ValidationError("Valid_from cannot be later than valid_until.")
     	return self.cleaned_data
+
+class PurchaseForm(forms.ModelForm):
+	class Meta:
+		model = Purchase
+		fields = '__all__'
+	def clean(self):
+		cleaned_data = super(PurchaseForm, self).clean()
+		try:
+			p = Purchase.objects.get(coupon = cleaned_data['coupon'] , product = cleaned_data['product'], email= cleaned_data['email'])
+			print(p)
+			raise forms.ValidationError('There is already a purchase recorded.')
+		except Purchase.DoesNotExist:
+			pass
+		return cleaned_data
 
 class CouponAdmin(admin.ModelAdmin):
 	form = CouponForm
@@ -32,7 +47,8 @@ class ProductAdmin(admin.ModelAdmin):
     filter_horizontal = ('coupons',)
 
 class PurchaseAdmin(admin.ModelAdmin):
-    list_display = ('coupon', 'product', 'email')
+	form = PurchaseForm
+	list_display = ('coupon', 'product', 'email')
 
 admin.site.register(Coupon, CouponAdmin)
 admin.site.register(Product, ProductAdmin)

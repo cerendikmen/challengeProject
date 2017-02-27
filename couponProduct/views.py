@@ -8,11 +8,14 @@ from datetime import date
 
 
 '''
+
 There are 2 endpoints here. The first one called Discount checks 
 (coupon, product_id, email) tuple and returns the reason if it is rejected 
 or returns the discounted price otherwise. discountedPrice is a helper method
 calculating the discounted price based on the coupon type, namely percentage or
-cash.
+cash. The second one called RecordPurchase records the successful purchase made and
+checks for duplicate rows so if the purchase has already been recorded, it does not
+saves it again.
 
 '''
 def discountedPrice(coupon_type, coupon_amount, product_price):
@@ -90,13 +93,21 @@ class RecordPurchase(APIView):
 		coupon_code = request.data['coupon']
 		product_id = request.data['product_id']
 		email = request.data['email']
+		response = {}
 		
 		coupon_used = Coupon.objects.get(code = coupon_code)
 		product_used = Product.objects.get(identifier = product_id)
 
-		newPurchase = Purchase(coupon = coupon_used, product = product_used, email = email)	
-		newPurchase.save()
-		return Response(status=status.HTTP_201_CREATED)	
+		newPurchase, isCreated = Purchase.objects.get_or_create(coupon = coupon_used, product = product_used, email = email)
+		if isCreated:
+			response['result'] = 'Success'
+			response['reason'] = 'The purchase has just been recorded.'
+			return Response(response)
+		else:
+			response['result'] = 'Fail'
+			response['reason'] = 'There is already a purchase recorded.'
+			return Response(response)
+
 
 
 
