@@ -12,8 +12,9 @@ class CouponForm(forms.ModelForm):
     def clean(self):
     	start_date = self.cleaned_data.get('valid_from')
     	end_date = self.cleaned_data.get('valid_until')
-    	if start_date > end_date:
-    		raise forms.ValidationError("Valid_from cannot be later than valid_until.")
+    	if end_date is not None:
+    		if start_date > end_date:
+    			raise forms.ValidationError("Valid_from cannot be later than valid_until.")
     	return self.cleaned_data
 
 class CouponAdmin(admin.ModelAdmin):
@@ -31,7 +32,7 @@ class ProductAdmin(admin.ModelAdmin):
     filter_horizontal = ('coupons',)
 
 class PurchaseAdmin(admin.ModelAdmin):
-    list_display = ('couponCode', 'productId', 'email')
+    list_display = ('coupon', 'product', 'email')
 
 admin.site.register(Coupon, CouponAdmin)
 admin.site.register(Product, ProductAdmin)

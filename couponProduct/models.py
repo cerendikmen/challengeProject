@@ -38,12 +38,12 @@ class Product(models.Model):
 		return self.identifier
 
 class Purchase(models.Model):
-	couponCode = models.CharField(max_length=6, blank=True)
-	productId = models.CharField(max_length=50, blank=False)
-	email = models.EmailField(help_text='A valid email address, please.')
+	coupon = models.ForeignKey(Coupon, on_delete = models.CASCADE)
+	product = models.ForeignKey(Product, on_delete = models.CASCADE)
+	email = models.EmailField("E-mail", help_text='A valid email address, please.')
 
 	def __str__(self):
-		return u'The product %s has been bought by %s' % (self.productId, self.email)
+		return u'The product %s has been bought by %s' % (product.identifier, self.email)
 
 
 

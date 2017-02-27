@@ -43,7 +43,8 @@ class Discount(APIView):
 			response['reason'] = 'Product does not exist.'
 			return Response(response)
 
-		coupons_used = Purchase.objects.filter(couponCode = coupon_code)
+		coupon_used = Coupon.objects.get(code = coupon_code)
+		coupons_used = Purchase.objects.filter(coupon = coupon_used)
 		if coupons_used.exists():
 			for coupon in coupons_used:
 				if coupon.email == email:
@@ -89,9 +90,11 @@ class RecordPurchase(APIView):
 		coupon_code = request.data['coupon']
 		product_id = request.data['product_id']
 		email = request.data['email']
-	
+		
+		coupon_used = Coupon.objects.get(code = coupon_code)
+		product_used = Product.objects.get(identifier = product_id)
 
-		newPurchase = Purchase(couponCode = coupon_code, productId = product_id, email = email)	
+		newPurchase = Purchase(coupon = coupon_used, product = product_used, email = email)	
 		newPurchase.save()
 		return Response(status=status.HTTP_201_CREATED)	
 
