@@ -1,0 +1,8 @@
+*.pyc
+node_modules/
+db.sqlite3
+assets/bundles
+*.save
+challengeProject/__pycache__
+couponProduct/__pycache__
+couponProduct/migrations

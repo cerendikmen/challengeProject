@@ -8,3 +8,4 @@ class CouponSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Product
+		fields = ('features','price')

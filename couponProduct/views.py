@@ -2,8 +2,9 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 from .models import *
+from .serializers import ProductSerializer
 from datetime import date
 
 
@@ -107,7 +108,17 @@ class RecordPurchase(APIView):
 			response['result'] = 'Fail'
 			response['reason'] = 'There is already a purchase recorded.'
 			return Response(response)
-
+class ProductList(generics.ListCreateAPIView):
+	"""
+	API endpoint for listing and creating Product objects
+	"""
+	def get(self, request, product_id):
+		product = Product.objects.get(identifier = product_id)
+		serializer= ProductSerializer(product)
+		return render(request, 'index.html', serializer.data)
+	#queryset = Product.objects.all()
+	#serializer_class = ProductSerializer
+    
 
 
 

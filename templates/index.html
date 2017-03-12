@@ -1,0 +1,14 @@
+{% load render_bundle from webpack_loader %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hello React</title>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script>
+        	var _appData = {features: "{{ features }}", price: "{{ price }}"};
+        </script>
+        {% render_bundle 'main' %}
+    </body>
+</html>
