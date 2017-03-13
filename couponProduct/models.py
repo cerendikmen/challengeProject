@@ -43,7 +43,7 @@ class Product(models.Model):
 		return self.identifier
 
 class Purchase(models.Model):
-	coupon = models.ForeignKey(Coupon, on_delete = models.CASCADE)
+	coupon = models.ForeignKey(Coupon, on_delete = models.CASCADE,null=True)
 	product = models.ForeignKey(Product, on_delete = models.CASCADE)
 	email = models.EmailField("E-mail", help_text='A valid email address, please.')
 

@@ -96,10 +96,15 @@ class RecordPurchase(APIView):
 		email = request.data['email']
 		response = {}
 		
-		coupon_used = Coupon.objects.get(code = coupon_code)
 		product_used = Product.objects.get(identifier = product_id)
+		if(coupon_code):
+			coupon_used = Coupon.objects.get(code = coupon_code)
+			newPurchase, isCreated = Purchase.objects.get_or_create(coupon = coupon_used, product = product_used, email = email)
+		else:
+			newPurchase, isCreated = Purchase.objects.get_or_create(product = product_used, email = email)
+		
 
-		newPurchase, isCreated = Purchase.objects.get_or_create(coupon = coupon_used, product = product_used, email = email)
+		
 		if isCreated:
 			response['result'] = True
 			response['reason'] = 'The purchase has just been recorded successfully.'

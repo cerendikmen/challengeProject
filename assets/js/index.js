@@ -105,6 +105,7 @@ class ProductForm extends React.Component {
         e.preventDefault();
         console.log("EMail: " + this.state.email);
         console.log("Coupon: " + this.state.coupon);
+
         var postData = { 
             coupon: this.state.coupon,
             product_id: _appData.identifier,
@@ -184,27 +185,49 @@ class ProductForm extends React.Component {
         
         return (
             <form>
-                    <label>E-mail<span>*</span>
-                        <input type="text" name="email" value={this.state.email} onChange={this.handleEmailChange} onFocus={this.onEmailFocus} onBlur={this.onEmailBlur}/>
-                    </label>
-                    <br />
-                    <label>Credit Card<span>*</span>
-                        <input type="text" name="creditCard" value={this.state.creditCard} onChange={this.handleCreditCardChange}/>
-                    </label>
-                    <br />
-                    <label>
-                        Coupon Code:
-                        <input type="text" name="coupon" value={this.state.coupon} onChange={this.handleCouponChange} onFocus={this.onCouponFocus} onBlur={this.onCouponBlur}/>
-                    </label>
-                    <br />
-                    {this.state.couponNotValid &&
-                        <span className="text">{this.state.data.reason}</span>
-                    }
-                    {this.state.couponValid &&
-                        <span className="text">{this.state.data.price}</span>
-                    }
-                    <br />
-                    <button type="button" onClick={this.handlePurchase}>Purchase</button>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>E-mail<span style={{color: '#ef2828'}}>*</span></label>
+                            </td>
+                            <td>
+                                <input type="text" name="email" value={this.state.email} required={true} onChange={this.handleEmailChange} onFocus={this.onEmailFocus} onBlur={this.onEmailBlur}/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Credit Card<span style={{color: '#ef2828'}}>*</span></label>
+                            </td>
+                            <td>
+                                <input type="text" name="creditCard" value={this.state.creditCard} required={true} onChange={this.handleCreditCardChange}/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Coupon Code</label>
+                            </td>
+                            <td>
+                                <input type="text" name="coupon" value={this.state.coupon} onChange={this.handleCouponChange} onFocus={this.onCouponFocus} onBlur={this.onCouponBlur}/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            {this.state.couponNotValid &&
+                                <span className="text">{this.state.data.reason}</span>
+                            }
+                            {this.state.couponValid &&
+                                <span className="text">{this.state.data.price}</span>
+                            }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            <button type="button" disabled={!(this.state.email&&this.state.creditCard)}onClick={this.handlePurchase}>Purchase</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </form>
         );
     }  
