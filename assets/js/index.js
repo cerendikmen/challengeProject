@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import '../css/frm.css';
 /*
 var ProductsList = React.createClass({
     loadProductsFromServer: function(){
@@ -183,34 +184,33 @@ class ProductForm extends React.Component {
         
         return (
             <form>
-                <label>
-                    E-mail:
-                    <input type="text" name="email" value={this.state.email} onChange={this.handleEmailChange} onFocus={this.onEmailFocus} onBlur={this.onEmailBlur}/>
-                </label>
-                <br />
-                <label>
-                    Credit Card:
-                    <input type="text" name="creditCard" value={this.state.creditCard} onChange={this.handleCreditCardChange}/>
-                </label>
-                <br />
-                <label>
-                    Coupon Code:
-                    <input type="text" name="coupon" value={this.state.coupon} onChange={this.handleCouponChange} onFocus={this.onCouponFocus} onBlur={this.onCouponBlur}/>
-                </label>
-                <br />
-                {this.state.couponNotValid &&
-                    <span className="text">{this.state.data.reason}</span>
-                }
-                {this.state.couponValid &&
-                    <span className="text">{this.state.data.price}</span>
-                }
-                <br />
-                <button type="button" onClick={this.handlePurchase}>Purchase</button>
-            </form>);
+                    <label>E-mail<span>*</span>
+                        <input type="text" name="email" value={this.state.email} onChange={this.handleEmailChange} onFocus={this.onEmailFocus} onBlur={this.onEmailBlur}/>
+                    </label>
+                    <br />
+                    <label>Credit Card<span>*</span>
+                        <input type="text" name="creditCard" value={this.state.creditCard} onChange={this.handleCreditCardChange}/>
+                    </label>
+                    <br />
+                    <label>
+                        Coupon Code:
+                        <input type="text" name="coupon" value={this.state.coupon} onChange={this.handleCouponChange} onFocus={this.onCouponFocus} onBlur={this.onCouponBlur}/>
+                    </label>
+                    <br />
+                    {this.state.couponNotValid &&
+                        <span className="text">{this.state.data.reason}</span>
+                    }
+                    {this.state.couponValid &&
+                        <span className="text">{this.state.data.price}</span>
+                    }
+                    <br />
+                    <button type="button" onClick={this.handlePurchase}>Purchase</button>
+            </form>
+        );
     }  
 }
 ReactDOM.render(
-    <div>
+    <div className="frm">
         <ProductList />
         <ProductForm url1='/purchase/check/' url2='/purchase/record/'/>
     </div>, 

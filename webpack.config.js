@@ -2,6 +2,7 @@
 var path = require('path')
 var webpack = require('webpack')
 var BundleTracker = require('webpack-bundle-tracker')
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 process.traceDeprecation = true
 
 module.exports = {
@@ -27,7 +28,8 @@ module.exports = {
             $: 'jquery',
             jQuery: 'jquery',
             'window.jQuery': 'jquery' 
-        })
+        }),
+        new ExtractTextPlugin("[name].css")
     ],
     
     module: {
@@ -44,7 +46,12 @@ module.exports = {
                     //specify that we will be dealing with React code
                     presets: ['react'] 
                 }
-            }
+            }, 
+            // Extract css files
+            {
+                test: /\.css$/,
+                loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' })
+            },
         ]
     },
     
@@ -52,6 +59,6 @@ module.exports = {
         //tells webpack where to look for modules
         modules: ['node_modules'],
         //extensions that should be used to resolve modules
-        extensions: ['*', '.js', '.jsx'] 
+        extensions: ['*', '.js', '.jsx', '.css'] 
     }   
 }
