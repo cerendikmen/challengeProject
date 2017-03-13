@@ -101,23 +101,22 @@ class RecordPurchase(APIView):
 
 		newPurchase, isCreated = Purchase.objects.get_or_create(coupon = coupon_used, product = product_used, email = email)
 		if isCreated:
-			response['result'] = 'Success'
-			response['reason'] = 'The purchase has just been recorded.'
+			response['result'] = True
+			response['reason'] = 'The purchase has just been recorded successfully.'
 			return Response(response)
 		else:
-			response['result'] = 'Fail'
+			response['result'] = False
 			response['reason'] = 'There is already a purchase recorded.'
 			return Response(response)
 class ProductList(generics.ListCreateAPIView):
 	"""
-	API endpoint for listing and creating Product objects
+	API endpoint for listing the identifier, description and the price of 
+	the specified Product object.
 	"""
 	def get(self, request, product_id):
 		product = Product.objects.get(identifier = product_id)
 		serializer= ProductSerializer(product)
 		return render(request, 'index.html', serializer.data)
-	#queryset = Product.objects.all()
-	#serializer_class = ProductSerializer
     
 
 

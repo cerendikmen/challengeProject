@@ -67,9 +67,9 @@ class ProductForm extends React.Component {
             email_focused:false,
             coupon_focused: false,
             couponValid: false,
-            couponNotValid: false
+            couponNotValid: false,
+            check: true
         };
-        this.check = true;
         this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handleCreditCardChange = this.handleCreditCardChange.bind(this);
         this.handleCouponChange = this.handleCouponChange.bind(this);
@@ -104,6 +104,28 @@ class ProductForm extends React.Component {
         e.preventDefault();
         console.log("EMail: " + this.state.email);
         console.log("Coupon: " + this.state.coupon);
+        var postData = { 
+            coupon: this.state.coupon,
+            product_id: _appData.identifier,
+            email: this.state.email
+        };
+ 
+        $.ajax({
+          url: this.props.url2,
+          dataType: 'json',
+          type: 'POST',
+          data: postData,
+          cache: false,
+          success: (data) => {
+            this.setState({data: data});
+            alert(this.state.data.reason);
+
+            
+          },
+          error: (xhr, status, err) => {
+            console.error(this.props.url, status, err.toString());
+          }
+        });
     }
     validateCouponFromServer() {
         console.log("product_id: " + _appData.identifier)
@@ -114,7 +136,7 @@ class ProductForm extends React.Component {
         };
  
         $.ajax({
-          url: this.props.url,
+          url: this.props.url1,
           dataType: 'json',
           type: 'POST',
           data: postData,
@@ -126,7 +148,7 @@ class ProductForm extends React.Component {
                 console.log("Result: " + data.result);
                 console.log("Reason: " + data.reason);
                 this.setState({couponValid: true});
-                this.check =false;
+                this.setState({ check: false });
             }
             else
             {
@@ -143,13 +165,13 @@ class ProductForm extends React.Component {
             
           },
           error: (xhr, status, err) => {
-            console.error(this.props.url, status, err.toString());
+            console.error(this.props.url1, status, err.toString());
           }
         });
     }
 
     render() {
-        if(this.check){
+        if(this.state.check){
             if(this.state.email_focused == false && this.state.coupon_focused == false && this.state.email&&this.state.coupon)
             {
                console.log("this.state.email: " + this.state.email);
@@ -182,76 +204,15 @@ class ProductForm extends React.Component {
                 {this.state.couponValid &&
                     <span className="text">{this.state.data.price}</span>
                 }
+                <br />
                 <button type="button" onClick={this.handlePurchase}>Purchase</button>
             </form>);
     }  
 }
-/*var ProductForm = React.createClass({
-    getInitialState: function() {
-        return (
-            this.state = {
-                email: '',
-                coupon: '',
-                creditCard: ''
-            },
-            this.email_focused: false,
-            this.coupon_focused: false
-        );
-    },
-    handleEmailChange: function(e) {
-        this.setState({email: e.target.value});
-    },
-    handleCreditCardChange: function(e) {
-        this.setState({creditCard: e.target.value});
-    },
-    handleCouponChange: function(e) {
-        this.setState({coupon: e.target.value});
-    },
-    onEmailBlur: function() {
-        this.setState({ email_focused: false })
-    },
-    onEmailFocus: function() {
-        this.setState({ email_focused: true })
-    },
-    onCouponBlur: function() {
-        this.setState({ coupon_focused: false })
-    },
-    onCouponFocus: function() {
-        this.setState({ coupon_focused: true })
-    },
-    render : function() {
-        if(this.state.email_focused == false && this.state.coupon_focused == false && this.state.email&&this.state.coupon)
-            console.log("HEYO");
-        
-        return (
-            <form>
-                <label>
-                    E-mail:
-                    <input type="text" name="email" value={this.state.email} onChange={this.handleEmailChange} onFocus={this.onEmailFocus} onBlur={this.onEmailBlur}/>
-                </label>
-                <br />
-                <label>
-                    Credit Card:
-                    <input type="text" name="creditCard" value={this.state.creditCard} onChange={this.handleCreditCardChange}/>
-                </label>
-                <br />
-                <label>
-                    Coupon Code:
-                    <input type="text" name="coupon" value={this.state.coupon} onChange={this.handleCouponChange} onFocus={this.onCouponFocus} onBlur={this.onCouponBlur}/>
-                </label>
-                <br />
-                <button type="button" onClick={this.handlePurchase}>Purchase</button>
-            </form>);
-    },
-    handlePurchase: function() {
-        console.log("EMail: " + this.state.email);
-        console.log("Coupon: " + this.state.coupon);
-    }
-});*/
 ReactDOM.render(
     <div>
         <ProductList />
-        <ProductForm url='/api/check/'/>
+        <ProductForm url1='/purchase/check/' url2='/purchase/record/'/>
     </div>, 
     document.getElementById('container')
 );
