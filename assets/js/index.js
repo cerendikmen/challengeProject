@@ -1,49 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import '../css/frm.css';
-/*
-var ProductsList = React.createClass({
-    loadProductsFromServer: function(){
-        request=$.ajax({
-		            url: this.props.url,
-		            datatype: 'json',
-		            cache: false,
-		            success: function(data) {
-		                this.setState({data: data});
-		            }.bind(this)
-		        })
-    },
 
-    getInitialState: function() {
-        return {data: []};
-    },
-
-    componentDidMount: function() {
-        this.loadProductsFromServer();
-    }, 
-    componentWillUnmount: function () {
-    	this.request.abort()
-	},
-    render: function() {
-        if (this.state.data) {
-            console.log('DATA!')
-            var productNodes = this.state.data.map(function(product){
-                return <li> {product.description} </li>
-            })
-        }
-        return (
-            <div>
-                <h1>Hello React!</h1>
-                <ul>
-                    {productNodes}
-                </ul>
-            </div>
-        )
-    }
-})
-
-ReactDOM.render(<ProductsList url='/api/'/>, 
-    document.getElementById('container'))*/
 class ProductList extends React.Component {
     render() {
         return(
