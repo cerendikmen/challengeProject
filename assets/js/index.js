@@ -120,7 +120,7 @@ class ProductForm extends React.Component {
           cache: false,
           success: (data) => {
             this.setState({data: data});
-            alert(this.state.data.reason);
+            alert(this.state.data.message);
 
             
           },

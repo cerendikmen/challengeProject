@@ -26,7 +26,6 @@ class PurchaseForm(forms.ModelForm):
 		cleaned_data = super(PurchaseForm, self).clean()
 		try:
 			p = Purchase.objects.get(coupon = cleaned_data['coupon'] , product = cleaned_data['product'], email= cleaned_data['email'])
-			print(p)
 			raise forms.ValidationError('There is already a purchase recorded.')
 		except Purchase.DoesNotExist:
 			pass
