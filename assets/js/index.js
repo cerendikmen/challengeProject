@@ -1,6 +1,5 @@
-var React = require('react')
-var ReactDOM = require('react-dom')
-var request
+import React from 'react';
+import ReactDOM from 'react-dom';
 /*
 var ProductsList = React.createClass({
     loadProductsFromServer: function(){
@@ -44,9 +43,8 @@ var ProductsList = React.createClass({
 
 ReactDOM.render(<ProductsList url='/api/'/>, 
     document.getElementById('container'))*/
-
-var Hello = React.createClass({
-    render: function() {
+class ProductList extends React.Component {
+    render() {
         return(
             <div>
                 <h4>Product Information:</h4>
@@ -55,80 +53,150 @@ var Hello = React.createClass({
                   <li>Price: {_appData.price}</li>
                 </ul>
             </div>
-        )
+        );
     }
-});
-/*class NameForm extends React.Component {
+}
+class ProductForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: '',
-            creditCard: '',
-            couponCode: ''
+            email:'',
+            creditCard:'',
+            coupon: '',
+            data: [],
+            email_focused:false,
+            coupon_focused: false,
+            couponValid: false,
+            couponNotValid: false
         };
-
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.check = true;
+        this.handleEmailChange = this.handleEmailChange.bind(this);
+        this.handleCreditCardChange = this.handleCreditCardChange.bind(this);
+        this.handleCouponChange = this.handleCouponChange.bind(this);
+        this.handlePurchase = this.handlePurchase.bind(this);
+        this.onEmailBlur = this.onEmailBlur.bind(this);
+        this.onEmailFocus = this.onEmailFocus.bind(this);
+        this.onCouponBlur = this.onCouponBlur.bind(this);
+        this.onCouponFocus = this.onCouponFocus.bind(this);
     }
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
+    handleEmailChange(e){
+        this.setState({email: e.target.value});
+    }
+    handleCreditCardChange(e) {
+        this.setState({creditCard: e.target.value});
+    }
+    handleCouponChange(e) {
+        this.setState({coupon: e.target.value});
+    }
+    onEmailBlur() {
+        this.setState({ email_focused: false })
+    }
+    onEmailFocus() {
+        this.setState({ email_focused: true })
+    }
+    onCouponBlur() {
+        this.setState({ coupon_focused: false })
+    }
+    onCouponFocus() {
+        this.setState({ coupon_focused: true })
+    }
+    handlePurchase(e) {
+        e.preventDefault();
+        console.log("EMail: " + this.state.email);
+        console.log("Coupon: " + this.state.coupon);
+    }
+    validateCouponFromServer() {
+        console.log("product_id: " + _appData.identifier)
+        var postData = { 
+            coupon: this.state.coupon,
+            product_id: _appData.identifier,
+            email: this.state.email
+        };
+ 
+        $.ajax({
+          url: this.props.url,
+          dataType: 'json',
+          type: 'POST',
+          data: postData,
+          cache: false,
+          success: (data) => {
+            this.setState({data: data});
+            if(data.result)
+            {
+                console.log("Result: " + data.result);
+                console.log("Reason: " + data.reason);
+                this.setState({couponValid: true});
+                this.check =false;
+            }
+            else
+            {
+                console.log("Result: " + data.result);
+                console.log("Reason: " + data.price);
+                this.setState({couponNotValid: true});
+                this.setState({ email: '' });
+                this.setState({ coupon: '' });
+                this.setState({ email_focused: false });
+                this.setState({ coupon_focused: false });
+                
+            }
 
-        this.setState({
-            [name]: value
+            
+          },
+          error: (xhr, status, err) => {
+            console.error(this.props.url, status, err.toString());
+          }
         });
-    }
-
-    handleSubmit(event) {
-        alert('A name was submitted: ' + this.state.value);
-        event.preventDefault();
     }
 
     render() {
+        if(this.check){
+            if(this.state.email_focused == false && this.state.coupon_focused == false && this.state.email&&this.state.coupon)
+            {
+               console.log("this.state.email: " + this.state.email);
+               console.log("this.state.coupon: " + this.state.coupon);
+               this.validateCouponFromServer();
+            }   
+        }
+        
+        
         return (
-          <form onSubmit={this.handleSubmit}>
-            <label>
-              E-mail:
-              <input
-                name="email"
-                type="text"
-                value={this.state.email} 
-                onChange={this.handleInputChange} />
-            </label>
-            <br />
-            <label>
-              Credit Card:
-              <input
-                name="creditCard"
-                type="text"
-                value={this.state.creditCard} 
-                onChange={this.handleInputChange} />
-            </label>
-            <br />
-            <label>
-              Coupon Code:
-              <input
-                name="couponCode"
-                type="text"
-                value={this.state.couponCode} 
-                onChange={this.handleInputChange} />
-            </label>
-            <br />
-            <input type="submit" value="Submit" />
-          </form>
-        );
-    }
-}*/
-var ProductForm = React.createClass({
+            <form>
+                <label>
+                    E-mail:
+                    <input type="text" name="email" value={this.state.email} onChange={this.handleEmailChange} onFocus={this.onEmailFocus} onBlur={this.onEmailBlur}/>
+                </label>
+                <br />
+                <label>
+                    Credit Card:
+                    <input type="text" name="creditCard" value={this.state.creditCard} onChange={this.handleCreditCardChange}/>
+                </label>
+                <br />
+                <label>
+                    Coupon Code:
+                    <input type="text" name="coupon" value={this.state.coupon} onChange={this.handleCouponChange} onFocus={this.onCouponFocus} onBlur={this.onCouponBlur}/>
+                </label>
+                <br />
+                {this.state.couponNotValid &&
+                    <span className="text">{this.state.data.reason}</span>
+                }
+                {this.state.couponValid &&
+                    <span className="text">{this.state.data.price}</span>
+                }
+                <button type="button" onClick={this.handlePurchase}>Purchase</button>
+            </form>);
+    }  
+}
+/*var ProductForm = React.createClass({
     getInitialState: function() {
         return (
-        this.state = {
-            email: '',
-            couponCode: '',
-            email_focused: false,
-            coupon_focused: false
-        });
+            this.state = {
+                email: '',
+                coupon: '',
+                creditCard: ''
+            },
+            this.email_focused: false,
+            this.coupon_focused: false
+        );
     },
     handleEmailChange: function(e) {
         this.setState({email: e.target.value});
@@ -164,7 +232,7 @@ var ProductForm = React.createClass({
                 <br />
                 <label>
                     Credit Card:
-                    <input type="text" name="creditCard" value={this.state.cre} onChange={this.handleCreditCardChange}/>
+                    <input type="text" name="creditCard" value={this.state.creditCard} onChange={this.handleCreditCardChange}/>
                 </label>
                 <br />
                 <label>
@@ -179,11 +247,11 @@ var ProductForm = React.createClass({
         console.log("EMail: " + this.state.email);
         console.log("Coupon: " + this.state.coupon);
     }
-});
+});*/
 ReactDOM.render(
     <div>
-        <Hello />
-        <ProductForm />
+        <ProductList />
+        <ProductForm url='/api/check/'/>
     </div>, 
     document.getElementById('container')
 );

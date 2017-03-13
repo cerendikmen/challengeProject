@@ -38,12 +38,12 @@ class Discount(APIView):
 
 
 		if not Coupon.objects.filter(code = coupon_code).exists():
-			response['result'] = 'Fail'
+			response['result'] = False
 			response['reason'] = 'Coupon does not exist.'
 			return Response(response)
 
 		if not Product.objects.filter(identifier = product_id).exists():
-			response['result'] = 'Fail'
+			response['result'] = False
 			response['reason'] = 'Product does not exist.'
 			return Response(response)
 
@@ -52,12 +52,12 @@ class Discount(APIView):
 		if coupons_used.exists():
 			for coupon in coupons_used:
 				if coupon.email == email:
-					response['result'] = 'Fail'
+					response['result'] = False
 					response['reason'] = 'The coupon was already used by this e-mail.'
 					return Response(response)
 
 		if not Product.objects.get(identifier = product_id).coupons.filter(code = coupon_code).exists():
-			response['result'] = 'Fail'
+			response['result'] = False
 			response['reason'] = 'The coupon is not applicable to this product.'
 			return Response(response)
 
@@ -65,14 +65,14 @@ class Discount(APIView):
 		coupon_valid_until = Coupon.objects.get(code = coupon_code).valid_until
 		if coupon_valid_from is not None:
 			if date.today() < coupon_valid_from:
-				response['result'] = 'Fail'
+				response['result'] = False
 				response['reason'] = 'The coupon is valid from ' + coupon_valid_from.strftime('%d-%m-%Y')
 				return Response(response)
 
 		if coupon_valid_until is not None:
 			if date.today() > coupon_valid_until:
 				passed_days = (date.today() - coupon_valid_until).days
-				response['result'] = 'Fail'
+				response['result'] = False
 				if passed_days > 1:
 					response['reason'] = 'The coupon expired by ' + str(passed_days) + ' days ago.'
 					return Response(response)
@@ -85,8 +85,8 @@ class Discount(APIView):
 		productPrice = Product.objects.get(identifier = product_id).price
 		newPrice = discountedPrice(couponType, couponAmount, productPrice)
 
-		response['result'] = 'Success'
-		response['price'] = str(newPrice)
+		response['result'] = True
+		response['price'] = newPrice
 		return Response(response)
 		
 class RecordPurchase(APIView):
