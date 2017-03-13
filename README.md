@@ -13,5 +13,8 @@
 
 `python manage.py migrate`
 
-**7.**  Start the Django development server `python manage.py runserver`
+**7.**  To build both react js and css files.
+`./node_modules/.bin/webpack --config webpack.config.js`
+
+**8.**  Start the Django development server `python manage.py runserver`
   
