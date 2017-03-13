@@ -12,6 +12,8 @@
 **6.** At the first time, create the tables and later propagates changes you make to your models into your database schema
 
 `python manage.py migrate`
+**7.**  To build both react js and css files.
+`./node_modules/.bin/webpack --config webpack.config.js`
 
-**7.**  Start the Django development server `python manage.py runserver`
+**8.**  Start the Django development server `python manage.py runserver`
   
