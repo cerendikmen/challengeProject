@@ -35,7 +35,7 @@ class Discount(APIView):
 		product_id = request.data['product_id']
 		email = request.data['email']
 		response = {}
-		coupon = Coupon.objects.get(code = coupon_code)
+		
 
 		if not Coupon.objects.filter(code = coupon_code).exists():
 			response['result'] = False
@@ -46,7 +46,7 @@ class Discount(APIView):
 			response['result'] = False
 			response['reason'] = 'Product does not exist.'
 			return Response(response)
-
+		coupon = Coupon.objects.get(code = coupon_code)
 		purchases = Purchase.objects.filter(coupon__code= coupon_code, email=email)
 		if purchases.exists():
 			response['result'] = False
